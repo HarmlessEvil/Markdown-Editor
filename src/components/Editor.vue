@@ -1,7 +1,23 @@
 <template>
   <div class="workspace">
-    <codemirror v-model="code" :options="options" id="editor" :spell-check="spellCheck" @changes="showSuggestion"/>
-    <VueMarkdown :source="code" id="preview" />
+    <div class="editor-wrapper">
+      <div class="title-wrapper">
+        <h2 class="editor-title">Editor</h2>
+      </div>
+      <codemirror
+          id="editor"
+          :options="options"
+          :spell-check="spellCheck"
+          :value="code"
+          @changes="showSuggestion"
+          @input="update"/>
+    </div>
+    <div class="preview-wrapper">
+      <div class="title-wrapper">
+        <h2 class="preview-title">Preview</h2>
+      </div>
+      <VueMarkdown :source="code" id="preview"/>
+    </div>
   </div>
 </template>
 
@@ -38,7 +54,8 @@ export default {
         mode: 'spell-checker',
         backdrop: 'text/x-markdown',
         styleActiveLine: true,
-        lineNumbers: true
+        lineNumbers: true,
+        lineWrapping: true
       },
       spellCheck: {
         customDicts: {
@@ -55,7 +72,10 @@ export default {
     }
   },
   methods: {
-    showSuggestion: debounce(function (codemirror) {
+    update: debounce(function (code) {
+      this.code = code
+    }, 300),
+    showSuggestion(codemirror) {
       codemirror.showHint({
         completeSingle: false,
         hint(editor) {
@@ -77,12 +97,12 @@ export default {
 
           return {
             list: suggestions,
-            from: { line: cursor.line, ch: cursor.ch - word.length },
+            from: {line: cursor.line, ch: cursor.ch - word.length},
             to: cursor
           }
         }
       })
-    }, 150)
+    },
   }
 }
 </script>
@@ -103,7 +123,26 @@ export default {
   display: flex
   align-items: stretch
 
+.preview-wrapper
+  border-left: 1px solid gray
+
+.title-wrapper
+  border-bottom: 1px solid gray
+  padding-left: 29px
+
+.editor-wrapper, .preview-wrapper
+  width: 50%
+
+  display: flex
+  flex-direction: column
+
 #editor, #preview
   height: 100%
+  min-height: 0
+
   flex: 1
+
+#preview
+  padding-left: 29px
+  overflow-y: scroll
 </style>

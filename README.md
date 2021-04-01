@@ -22,7 +22,7 @@ To add a language, you need to provide two files: `.dic` and `.aff`. There is al
 available: https://github.com/wooorm/dictionaries. Note that you need to carefully inspect, whether it's license fits
 your project.
 
-You can add new language with just two steps:
+You can add new language with just three steps:
 
 1. Run `yarn add dictionary-{locale}`, where `{locale}` is one of locales, available in the repository
 2. In `Editor.vue` add the following import (the name does not matter):
