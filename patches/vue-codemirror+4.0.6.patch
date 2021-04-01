@@ -1,0 +1,38 @@
+diff --git a/node_modules/vue-codemirror/src/codemirror.vue b/node_modules/vue-codemirror/src/codemirror.vue
+index f14c5e4..20bac7e 100755
+--- a/node_modules/vue-codemirror/src/codemirror.vue
++++ b/node_modules/vue-codemirror/src/codemirror.vue
+@@ -7,6 +7,9 @@
+ 
+ <script>
+   // lib
++  import _CodeMirrorSpellChecker from 'codemirror-spell-checker'
++  const CodeMirrorSpellChecker = window.CodeMirrorSpellChecker || _CodeMirrorSpellChecker
++
+   import _CodeMirror from 'codemirror'
+   const CodeMirror = window.CodeMirror || _CodeMirror
+ 
+@@ -77,6 +80,10 @@
+       globalEvents: {
+         type: Array,
+         default: () => ([])
++      },
++      spellCheck: {
++        type: Boolean,
++        default: false
+       }
+     },
+     watch: {
+@@ -100,6 +107,12 @@
+     },
+     methods: {
+       initialize() {
++        if (this.spellCheck) {
++          CodeMirrorSpellChecker({
++            codeMirrorInstance: CodeMirror
++          })
++        }
++
+         const cmOptions = Object.assign({}, this.globalOptions, this.options)
+         if (this.merge) {
+           this.codemirror = CodeMirror.MergeView(this.$refs.mergeview, cmOptions)
