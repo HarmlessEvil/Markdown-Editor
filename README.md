@@ -5,28 +5,11 @@
 ```
 yarn install
 ```
-
-### Compiles and hot-reloads for development
-
-```
-yarn serve
-```
-
 ### Compiles and minifies for production
 
 ```
 yarn build
 ```
-
-### Lints and fixes files
-
-```
-yarn lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Multiple languages spelling support
 
@@ -72,6 +55,20 @@ data() {
 }
 ```
 
+## Autocomplete
+
+The file with autocomplete phrases is located at `src/assets/data/autocomplete.json`.
+It has the following dead-simple structure:
+```json
+{
+  "word": ["replacement", "suggestions"]
+}
+```
+
+Suggestion widget will pop up near cursor in 150ms after user will 
+stop typing or pasting code. To apply suggestion, `TAB` should be
+pressed – it will apply currently seleccted suggestion.
+
 ## Notes
 
 Plugin [`vue-codemirror`](https://www.npmjs.com/package/vue-codemirror)
@@ -79,3 +76,8 @@ did not support spell-checking. I modified its code and used
 [`patch-package`](https://www.npmjs.com/package/patch-package) to locally apply the fix. Plugin seems to be unsupported
 for over a year 😟. Although `patch-package` in my opinion is a perfectly fine scalable solution even for production.
 Especially if you'd have to wait too long for Pull Request approval.
+
+Same story with [`codemirror-spell-checker`](https://www.npmjs.com/package/codemirror-spell-checker).
+It didn't support spell check for multiple languages, so I had to
+add it manually by patchnig the package. The code is based on 
+existing Pull Request anyway 🙂.
