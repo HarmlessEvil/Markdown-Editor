@@ -9,6 +9,8 @@ import 'codemirror/mode/markdown/markdown'
 
 import ruDic from 'dictionary-ru/index.dic'
 import ruAff from 'dictionary-ru/index.aff'
+import enDic from 'dictionary-en/index.dic'
+import enAff from 'dictionary-en/index.aff'
 
 import 'codemirror/lib/codemirror.css'
 
@@ -31,6 +33,10 @@ export default {
           "ru_RU": {
             dic: ruDic,
             aff: ruAff
+          },
+          "en_US": {
+            dic: enDic,
+            aff: enAff
           }
         }
       }
