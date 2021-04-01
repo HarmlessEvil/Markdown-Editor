@@ -1,11 +1,14 @@
 <template>
-  <codemirror v-model="code" :options="options" id="editor" spell-check />
+  <codemirror v-model="code" :options="options" id="editor" :spell-check="spellCheck" />
 </template>
 
 <script>
 import {codemirror} from 'vue-codemirror/src/index'
 import 'codemirror/addon/mode/overlay'
 import 'codemirror/mode/markdown/markdown'
+
+import ruDic from 'dictionary-ru/index.dic'
+import ruAff from 'dictionary-ru/index.aff'
 
 import 'codemirror/lib/codemirror.css'
 
@@ -21,11 +24,18 @@ export default {
         mode: 'spell-checker',
         backdrop: 'text/x-markdown',
         styleActiveLine: true,
-        lineNumbers: true,
-        spellCheck: true
+        lineNumbers: true
+      },
+      spellCheck: {
+        customDicts: {
+          "ru_RU": {
+            dic: ruDic,
+            aff: ruAff
+          }
+        }
       }
     }
-  },
+  }
 }
 </script>
 
@@ -35,7 +45,6 @@ export default {
 
 #editor .CodeMirror .cm-spell-error
   text-decoration: red underline wavy
-
 </style>
 
 <style scoped lang="sass">

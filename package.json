@@ -5,11 +5,14 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "postinstall": "npx patch-package"
   },
   "dependencies": {
     "codemirror-spell-checker": "^1.1.2",
     "core-js": "^3.6.5",
+    "dictionary-ru": "^2.0.2",
+    "raw-loader": "^4.0.2",
     "sass": "^1.32.8",
     "sass-loader": "10",
     "vue": "^2.6.11",

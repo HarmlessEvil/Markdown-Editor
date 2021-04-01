@@ -1,0 +1,124 @@
+diff --git a/node_modules/codemirror-spell-checker/src/js/spell-checker.js b/node_modules/codemirror-spell-checker/src/js/spell-checker.js
+index a292034..b28d341 100644
+--- a/node_modules/codemirror-spell-checker/src/js/spell-checker.js
++++ b/node_modules/codemirror-spell-checker/src/js/spell-checker.js
+@@ -5,6 +5,46 @@
+ // Requires
+ var Typo = require("typo-js");
+ 
++function loadAffDictData() {
++	// Load AFF/DIC data
++	if(!CodeMirrorSpellChecker.aff_loading) {
++		CodeMirrorSpellChecker.aff_loading = true;
++		var xhr_aff = new XMLHttpRequest();
++		xhr_aff.open("GET", "https://cdn.jsdelivr.net/codemirror.spell-checker/latest/en_US.aff", true);
++		xhr_aff.onload = function() {
++			if(xhr_aff.readyState === 4 && xhr_aff.status === 200) {
++				CodeMirrorSpellChecker.aff_data = xhr_aff.responseText;
++				CodeMirrorSpellChecker.num_loaded++;
++
++				if(CodeMirrorSpellChecker.num_loaded == 2) {
++					CodeMirrorSpellChecker.typos.push(new Typo("en_US", CodeMirrorSpellChecker.aff_data, CodeMirrorSpellChecker.dic_data, {
++                        platform: "any"
++                    }));
++				}
++			}
++		};
++		xhr_aff.send(null);
++	}
++
++	if(!CodeMirrorSpellChecker.dic_loading) {
++		CodeMirrorSpellChecker.dic_loading = true;
++		var xhr_dic = new XMLHttpRequest();
++		xhr_dic.open("GET", "https://cdn.jsdelivr.net/codemirror.spell-checker/latest/en_US.dic", true);
++		xhr_dic.onload = function() {
++			if(xhr_dic.readyState === 4 && xhr_dic.status === 200) {
++				CodeMirrorSpellChecker.dic_data = xhr_dic.responseText;
++				CodeMirrorSpellChecker.num_loaded++;
++
++				if(CodeMirrorSpellChecker.num_loaded == 2) {
++                    CodeMirrorSpellChecker.typos.push(new Typo("en_US", CodeMirrorSpellChecker.aff_data, CodeMirrorSpellChecker.dic_data, {
++                        platform: "any"
++                    }));
++				}
++			}
++		};
++		xhr_dic.send(null);
++	}
++}
+ 
+ // Create function
+ function CodeMirrorSpellChecker(options) {
+@@ -30,46 +70,16 @@ function CodeMirrorSpellChecker(options) {
+ 
+ 	// Define the new mode
+ 	options.codeMirrorInstance.defineMode("spell-checker", function(config) {
+-		// Load AFF/DIC data
+-		if(!CodeMirrorSpellChecker.aff_loading) {
+-			CodeMirrorSpellChecker.aff_loading = true;
+-			var xhr_aff = new XMLHttpRequest();
+-			xhr_aff.open("GET", "https://cdn.jsdelivr.net/codemirror.spell-checker/latest/en_US.aff", true);
+-			xhr_aff.onload = function() {
+-				if(xhr_aff.readyState === 4 && xhr_aff.status === 200) {
+-					CodeMirrorSpellChecker.aff_data = xhr_aff.responseText;
+-					CodeMirrorSpellChecker.num_loaded++;
+-
+-					if(CodeMirrorSpellChecker.num_loaded == 2) {
+-						CodeMirrorSpellChecker.typo = new Typo("en_US", CodeMirrorSpellChecker.aff_data, CodeMirrorSpellChecker.dic_data, {
+-							platform: "any"
+-						});
+-					}
+-				}
+-			};
+-			xhr_aff.send(null);
++		const shouldLoadData = options.customDicts === undefined;
++		if (shouldLoadData) {
++			loadAffDictData();
++		} else {
++		    CodeMirrorSpellChecker.typos = Object.keys(options.customDicts).map(key => {
++		        const dict = options.customDicts[key]
++                return new Typo(key, dict.aff, dict.dic, { platform: "any" })
++            })
+ 		}
+ 
+-		if(!CodeMirrorSpellChecker.dic_loading) {
+-			CodeMirrorSpellChecker.dic_loading = true;
+-			var xhr_dic = new XMLHttpRequest();
+-			xhr_dic.open("GET", "https://cdn.jsdelivr.net/codemirror.spell-checker/latest/en_US.dic", true);
+-			xhr_dic.onload = function() {
+-				if(xhr_dic.readyState === 4 && xhr_dic.status === 200) {
+-					CodeMirrorSpellChecker.dic_data = xhr_dic.responseText;
+-					CodeMirrorSpellChecker.num_loaded++;
+-
+-					if(CodeMirrorSpellChecker.num_loaded == 2) {
+-						CodeMirrorSpellChecker.typo = new Typo("en_US", CodeMirrorSpellChecker.aff_data, CodeMirrorSpellChecker.dic_data, {
+-							platform: "any"
+-						});
+-					}
+-				}
+-			};
+-			xhr_dic.send(null);
+-		}
+-
+-
+ 		// Define what separates a word
+ 		var rx_word = "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~ ";
+ 
+@@ -90,7 +100,7 @@ function CodeMirrorSpellChecker(options) {
+ 					stream.next();
+ 				}
+ 
+-				if(CodeMirrorSpellChecker.typo && !CodeMirrorSpellChecker.typo.check(word))
++				if(CodeMirrorSpellChecker.typos.some(typo => !typo.check(word)))
+ 					return "spell-error"; // CSS class: cm-spell-error
+ 
+ 				return null;
+@@ -112,7 +122,7 @@ CodeMirrorSpellChecker.aff_loading = false;
+ CodeMirrorSpellChecker.dic_loading = false;
+ CodeMirrorSpellChecker.aff_data = "";
+ CodeMirrorSpellChecker.dic_data = "";
+-CodeMirrorSpellChecker.typo;
++CodeMirrorSpellChecker.typos = [];
+ 
+ 
+ // Export
