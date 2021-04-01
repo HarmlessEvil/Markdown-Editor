@@ -1,9 +1,14 @@
 <template>
-  <codemirror v-model="code" :options="options" id="editor" :spell-check="spellCheck" @changes="showSuggestion"/>
+  <div class="workspace">
+    <codemirror v-model="code" :options="options" id="editor" :spell-check="spellCheck" @changes="showSuggestion"/>
+    <VueMarkdown :source="code" id="preview" />
+  </div>
 </template>
 
 <script>
 import debounce from 'debounce'
+
+import VueMarkdown from 'vue-markdown'
 
 import {codemirror} from 'vue-codemirror/src/index'
 import 'codemirror/addon/mode/overlay'
@@ -23,7 +28,8 @@ import 'codemirror/addon/hint/show-hint.css'
 export default {
   name: "Editor",
   components: {
-    codemirror
+    codemirror,
+    VueMarkdown
   },
   data() {
     return {
@@ -90,7 +96,14 @@ export default {
 </style>
 
 <style scoped lang="sass">
-#editor
+.workspace
   flex: 1
   min-height: 0
+
+  display: flex
+  align-items: stretch
+
+#editor, #preview
+  height: 100%
+  flex: 1
 </style>
