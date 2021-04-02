@@ -1,8 +1,8 @@
 diff --git a/node_modules/codemirror-spell-checker/src/js/spell-checker.js b/node_modules/codemirror-spell-checker/src/js/spell-checker.js
-index a292034..1cb5748 100644
+index a292034..60288c0 100644
 --- a/node_modules/codemirror-spell-checker/src/js/spell-checker.js
 +++ b/node_modules/codemirror-spell-checker/src/js/spell-checker.js
-@@ -5,6 +5,46 @@
+@@ -5,6 +5,55 @@
  // Requires
  var Typo = require("typo-js");
  
@@ -46,10 +46,19 @@ index a292034..1cb5748 100644
 +		xhr_dic.send(null);
 +	}
 +}
++
++function addDict(locale, dic, aff) {
++    new Typo(locale, aff, dic, {
++        asyncLoad: true,
++        loadedCallback: function(typo) {
++	        CodeMirrorSpellChecker.typos.push(typo);
++        }
++    });
++}
  
  // Create function
  function CodeMirrorSpellChecker(options) {
-@@ -30,46 +70,16 @@ function CodeMirrorSpellChecker(options) {
+@@ -30,45 +79,7 @@ function CodeMirrorSpellChecker(options) {
  
  	// Define the new mode
  	options.codeMirrorInstance.defineMode("spell-checker", function(config) {
@@ -71,16 +80,8 @@ index a292034..1cb5748 100644
 -				}
 -			};
 -			xhr_aff.send(null);
-+		const shouldLoadData = options.customDicts === undefined;
-+		if (shouldLoadData) {
-+			loadAffDictData();
-+		} else {
-+		    CodeMirrorSpellChecker.typos = Object.keys(options.customDicts).map(key => {
-+		        const dict = options.customDicts[key]
-+                return new Typo(key, dict.aff, dict.dic, { platform: "any" })
-+            })
- 		}
- 
+-		}
+-
 -		if(!CodeMirrorSpellChecker.dic_loading) {
 -			CodeMirrorSpellChecker.dic_loading = true;
 -			var xhr_dic = new XMLHttpRequest();
@@ -100,11 +101,11 @@ index a292034..1cb5748 100644
 -			xhr_dic.send(null);
 -		}
 -
--
++        loadAffDictData();
+ 
  		// Define what separates a word
  		var rx_word = "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~ ";
- 
-@@ -90,7 +100,7 @@ function CodeMirrorSpellChecker(options) {
+@@ -90,7 +101,7 @@ function CodeMirrorSpellChecker(options) {
  					stream.next();
  				}
  
@@ -113,12 +114,15 @@ index a292034..1cb5748 100644
  					return "spell-error"; // CSS class: cm-spell-error
  
  				return null;
-@@ -112,7 +122,7 @@ CodeMirrorSpellChecker.aff_loading = false;
+@@ -112,8 +123,8 @@ CodeMirrorSpellChecker.aff_loading = false;
  CodeMirrorSpellChecker.dic_loading = false;
  CodeMirrorSpellChecker.aff_data = "";
  CodeMirrorSpellChecker.dic_data = "";
 -CodeMirrorSpellChecker.typo;
+-
 +CodeMirrorSpellChecker.typos = [];
- 
++CodeMirrorSpellChecker.addDict = addDict;
  
  // Export
+ module.exports = CodeMirrorSpellChecker;
+\ No newline at end of file

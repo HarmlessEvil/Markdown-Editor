@@ -1,5 +1,5 @@
 diff --git a/node_modules/vue-codemirror/src/codemirror.vue b/node_modules/vue-codemirror/src/codemirror.vue
-index f14c5e4..c786987 100755
+index f14c5e4..0901a76 100755
 --- a/node_modules/vue-codemirror/src/codemirror.vue
 +++ b/node_modules/vue-codemirror/src/codemirror.vue
 @@ -7,6 +7,9 @@
@@ -18,27 +18,36 @@ index f14c5e4..c786987 100755
          default: () => ([])
 +      },
 +      spellCheck: {
-+        type: [Boolean, Object],
++        type: Boolean,
 +        default: false
        }
      },
      watch: {
-@@ -100,6 +107,18 @@
+@@ -96,10 +103,16 @@
+       },
+       value(newVal) {
+         this.handerCodeChange(newVal)
+-      },
++      }
      },
      methods: {
        initialize() {
 +        if (this.spellCheck) {
-+          const options = {
++          CodeMirrorSpellChecker({
 +            codeMirrorInstance: CodeMirror
-+          }
-+
-+          if (this.spellCheck.customDicts !== undefined) {
-+            options.customDicts = this.spellCheck.customDicts
-+          }
-+
-+          CodeMirrorSpellChecker(options)
++          })
 +        }
 +
          const cmOptions = Object.assign({}, this.globalOptions, this.options)
          if (this.merge) {
            this.codemirror = CodeMirror.MergeView(this.$refs.mergeview, cmOptions)
+@@ -199,6 +212,9 @@
+         // Restore values
+         this.cminstance.doc.history = history
+         this.cminstance.doc.cleanGeneration = cleanGeneration
++      },
++      addDict(locale, dic, aff) {
++        CodeMirrorSpellChecker.addDict(locale, dic, aff)
+       }
+     },
+     mounted() {

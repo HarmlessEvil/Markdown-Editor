@@ -1,16 +1,22 @@
 <template>
   <div class="workspace">
+    <loading :active.sync="isLoading" loader="bars">
+      <div class="loading-text">
+        Parsing dictionaries...
+      </div>
+    </loading>
     <div class="editor-wrapper">
       <div class="title-wrapper">
         <h2 class="editor-title">Editor</h2>
       </div>
       <codemirror
           id="editor"
-          :options="options"
-          :spell-check="spellCheck"
+          spell-check
+          ref="editor"
           :value="code"
-          @changes="showSuggestion"
-          @input="update"/>
+          @input="update"
+          :options="options"
+          @changes="showSuggestion"/>
     </div>
     <div class="preview-wrapper">
       <div class="title-wrapper">
@@ -24,6 +30,7 @@
 <script>
 import debounce from 'debounce'
 
+import Loading from 'vue-loading-overlay'
 import VueMarkdown from 'vue-markdown'
 
 import {codemirror} from 'vue-codemirror/src/index'
@@ -31,13 +38,9 @@ import 'codemirror/addon/mode/overlay'
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/mode/markdown/markdown'
 
-import ruDic from 'dictionary-ru/index.dic'
-import ruAff from 'dictionary-ru/index.aff'
-import enDic from 'dictionary-en/index.dic'
-import enAff from 'dictionary-en/index.aff'
-
 import autocomplete from '@/assets/data/autocomplete.json'
 
+import 'vue-loading-overlay/dist/vue-loading.css'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/hint/show-hint.css'
 
@@ -45,6 +48,7 @@ export default {
   name: "Editor",
   components: {
     codemirror,
+    Loading,
     VueMarkdown
   },
   data() {
@@ -57,21 +61,13 @@ export default {
         lineNumbers: true,
         lineWrapping: true
       },
-      spellCheck: {
-        customDicts: {
-          "ru_RU": {
-            dic: ruDic,
-            aff: ruAff
-          },
-          "en_US": {
-            dic: enDic,
-            aff: enAff
-          }
-        }
-      }
+      isLoading: true
     }
   },
   methods: {
+    addDict(locale, dic, aff) {
+      this.$refs.editor.addDict(locale, dic, aff)
+    },
     update: debounce(function (code) {
       this.code = code
     }, 300),
@@ -103,6 +99,15 @@ export default {
         }
       })
     },
+  },
+  async beforeMount() {
+    let res = await Promise.all([import('dictionary-ru/index.dic'), import('dictionary-ru/index.aff')])
+    this.addDict("ru_RU", res[0].default, res[1].default)
+
+    res = await Promise.all([import('dictionary-en/index.dic'), import('dictionary-en/index.aff')])
+    this.addDict("en_US", res[0].default, res[1].default)
+
+    this.isLoading = false
   }
 }
 </script>
@@ -135,6 +140,9 @@ export default {
 
   display: flex
   flex-direction: column
+
+.loading-text
+  font-size: 3em
 
 #editor, #preview
   height: 100%

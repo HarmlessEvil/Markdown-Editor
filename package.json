@@ -20,6 +20,7 @@
     "sass-loader": "10",
     "vue": "^2.6.11",
     "vue-codemirror": "^4.0.6",
+    "vue-loading-overlay": "^3.4.2",
     "vue-markdown": "^2.2.4"
   },
   "devDependencies": {
