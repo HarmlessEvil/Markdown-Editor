@@ -71,7 +71,6 @@ existing Pull Request anyway 🙂.
 
 ## Known problems
 
-- Scroll between views is not synchronized
 - If I hold enter (or some other key), it may cause some minor UI freezes
 - **(high severity)** Library that parses dictionaries does it 
   veeeery slow. Parsing of Russian dictionary takes around 5s!
