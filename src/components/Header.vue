@@ -12,8 +12,8 @@ export default {
 
 <style scoped lang="sass">
 .title
-  padding-left: 29px
+  padding-left: $gutter-size
 
 .title-wrapper
-  border-bottom: 1px solid gray
+  border-bottom: $border-primary
 </style>

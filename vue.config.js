@@ -6,5 +6,14 @@ module.exports = {
             .use('raw-loader')
             .loader('raw-loader')
             .end()
+    },
+    css: {
+        loaderOptions: {
+            sass: {
+                additionalData: `
+@import "@/assets/sass/variables.sass"
+                `
+            }
+        }
     }
 }

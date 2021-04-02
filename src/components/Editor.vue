@@ -139,11 +139,11 @@ export default {
   align-items: stretch
 
 .preview-wrapper
-  border-left: 1px solid gray
+  border-left: $border-primary
 
 .title-wrapper
-  border-bottom: 1px solid gray
-  padding-left: 29px
+  border-bottom: $border-primary
+  padding-left: $gutter-size
 
 .editor-wrapper, .preview-wrapper
   width: 50%
@@ -161,6 +161,6 @@ export default {
   flex: 1
 
 #preview
-  padding-left: 29px
+  padding-left: $gutter-size
   overflow-y: scroll
 </style>
