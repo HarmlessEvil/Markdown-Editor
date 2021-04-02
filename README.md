@@ -5,10 +5,10 @@
 ```
 yarn install
 ```
-### Compiles and minifies for production
+### Run UI server
 
 ```
-yarn build
+yarn serve
 ```
 
 ## Screenshot
