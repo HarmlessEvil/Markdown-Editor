@@ -11,6 +11,13 @@ yarn install
 yarn build
 ```
 
+## Screenshot
+
+<details>
+<summary>Click to open (1.2Mib)</summary>
+![Screenshot](docs/screenshot.png)
+</details>
+
 ## Multiple languages spelling support
 
 ### How to add another language?
@@ -60,3 +67,11 @@ Same story with [`codemirror-spell-checker`](https://www.npmjs.com/package/codem
 It didn't support spell check for multiple languages, so I had to
 add it manually by patchnig the package. The code is based on 
 existing Pull Request anyway 🙂.
+
+## Known problems
+
+- Scroll between views is not synchronized
+- If I hold enter (or some other key), it may cause some minor UI freezes
+- **(high severity)** Library that parses dictionaries does it 
+  veeeery slow. Parsing of Russian dictionary takes around 5s!
+  But, unfortunately, I can't figure out, how to solve this.
