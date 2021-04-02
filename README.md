@@ -15,6 +15,7 @@ yarn build
 
 <details>
 <summary>Click to open (1.2Mib)</summary>
+
 ![Screenshot](/docs/screenshot.png)
 </details>
 
