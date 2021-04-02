@@ -15,7 +15,7 @@ yarn build
 
 <details>
 <summary>Click to open (1.2Mib)</summary>
-![Screenshot](docs/screenshot.png)
+![Screenshot](/docs/screenshot.png)
 </details>
 
 ## Multiple languages spelling support
