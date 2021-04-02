@@ -61,6 +61,16 @@ export default {
         lineNumbers: true,
         lineWrapping: true
       },
+      spellcheckDictionaries: {
+        "ru_RU": {
+          dic: 'dictionary-ru/index.dic',
+          aff: 'dictionary-ru/index.aff'
+        },
+        "en_US": {
+          dic: 'dictionary-en/index.dic',
+          aff: 'dictionary-en/index.aff'
+        }
+      },
       isLoading: true
     }
   },

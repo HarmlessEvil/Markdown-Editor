@@ -13,9 +13,6 @@ yarn build
 
 ## Multiple languages spelling support
 
-> Warning: change set of supported languages "on the fly" is not
-> implemented
-
 ### How to add another language?
 
 To add a language, you need to provide two files: `.dic` and `.aff`. There is already set of languages
@@ -25,33 +22,15 @@ your project.
 You can add new language with just three steps:
 
 1. Run `yarn add dictionary-{locale}`, where `{locale}` is one of locales, available in the repository
-2. In `Editor.vue` add the following import (the name does not matter):
-
+2. In `Editor.vue` add the following lines of code to method `beforeMount()`:
 ```js
-import localeDic from 'dictionary-{locale}/index.dic'
-import localeAff from 'dictionary-{locale}/index.aff'
-```
-
-3. Add new entry to `spellCheck.customDicts` object:
-
-```js
-data() {
-    return {
-        // ...
-        spellCheck: {
-            customDicts: {
-                // other locales ...
-                "{locale}": {
-                    dic: localeDic,
-                    aff: localeAff
-                },
-                "{oneMoreLocale}": {
-                    dic: oneMoreLocaleDic,
-                    aff: oneMoreLocaleAff
-                }
-            }
-        }
-    }
+beforeMount() {
+    //...
+    
+    res = await Promise.all([import('dictionary-{locale}/index.dic'), import('dictionary-{locale}/index.aff')])
+    this.addDict("{locale}", res[0].default, res[1].default)
+    
+    this.isLoading = false
 }
 ```
 
